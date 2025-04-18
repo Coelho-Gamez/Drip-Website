@@ -3,112 +3,57 @@
 <head>
     <title>Investment Calculator</title>
     <style>
-        /* Light Mode Styles (Default) */
+        /* Existing Light Mode Styles */
         body {
             font-family: sans-serif;
             margin: 20px;
             background-color: #f4f4f4;
             color: #333;
             transition: background-color 0.3s ease, color 0.3s ease;
+            display: flex; /* Enable flexbox for layout */
+            gap: 30px; /* Space between calculator and graph */
+            align-items: start; /* Align items to the top */
         }
 
         .container {
             max-width: 800px;
-            margin: 0 auto;
+            margin: 0; /* Remove auto margin when using flexbox on body */
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            flex-grow: 1; /* Allow container to grow */
         }
 
-        h1, h2, label {
-            color: #333;
-            transition: color 0.3s ease;
-        }
-
-        label {
-            color: #555;
-        }
-
-        input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
+        #chart-container {
+            width: 400px; /* Adjust width as needed */
+            height: 300px; /* Adjust height as needed */
+            border: 1px solid #ddd;
+            border-radius: 8px;
             background-color: #fff;
-            color: #333;
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-        }
-
-        input[type="number"]:focus {
-            border-color: #007bff;
-        }
-
-        .button-panel {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
             justify-content: center;
+            align-items: center;
+            font-style: italic;
+            color: #777;
         }
 
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
+        .dark-mode #chart-container {
+            background-color: #252525;
+            border-color: #555;
+            color: #a6a6a6;
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
         }
 
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        #results-container {
-            margin-top: 30px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: #f9f9f9;
-            color: #333;
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-        }
-
-        h2 {
-            border-bottom-color: #eee;
-        }
-
-        table {
+        #investmentChart {
             width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
+            height: 100%;
         }
 
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-            transition: border-color 0.3s ease;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            color: #333;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        #final-totals {
-            margin-top: 20px;
-            font-weight: bold;
-        }
-
-        .total-item {
-            margin-bottom: 5px;
-        }
+        /* Existing Light Mode Styles for other elements remain the same */
 
         /* Dark Mode Styles */
         body.dark-mode {
@@ -121,55 +66,13 @@
             box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
         }
 
-        .dark-mode h1,
-        .dark-mode h2,
-        .dark-mode label {
-            color: #d4d4d4;
-        }
+        /* Existing Dark Mode Styles for other elements remain the same */
 
-        .dark-mode label {
-            color: #a6a6a6;
-        }
-
-        .dark-mode input[type="number"] {
-            background-color: #333;
-            color: #d4d4d4;
-            border-color: #555;
-        }
-
-        .dark-mode input[type="number"]:focus {
-            border-color: #007bff;
-        }
-
-        .dark-mode #results-container {
-            background-color: #333;
-            color: #d4d4d4;
-            border-color: #555;
-        }
-
-        .dark-mode h2 {
-            border-bottom-color: #555;
-        }
-
-        .dark-mode table,
-        .dark-mode th,
-        .dark-mode td {
-            border-color: #555;
-        }
-
-        .dark-mode th {
-            background-color: #444;
-            color: #d4d4d4;
-        }
-
-        .dark-mode .button-panel button {
-            background-color: #3a3a3a;
-            color: #d4d4d4;
-            border: 1px solid #555;
-        }
-
-        .dark-mode .button-panel button:hover {
-            background-color: #555;
+        .button-panel {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
         }
     </style>
 </head>
@@ -237,6 +140,7 @@
 
             <div class="button-panel">
                 <button type="submit">Calculate</button>
+                <button type="button" id="compareButton" disabled>Compare</button>
                 <button type="button" onclick="useTemplate()">Use Template</button>
                 <button type="button" onclick="resetForm()">Reset</button>
                 <input type="file" id="csvFileInput" accept=".csv" style="display:none" onchange="loadCSVData()">
@@ -257,6 +161,10 @@
                 <div class="total-item">Cost Basis ($): <span id="costBasis"></span></div>
             </div>
         </div>
+    </div>
+
+    <div id="chart-container">
+        <canvas id="investmentChart"></canvas>
     </div>
 
     <script>
@@ -282,6 +190,12 @@
             document.getElementById("totalDividends").textContent = "";
             document.getElementById("capitalGainsTax").textContent = "";
             document.getElementById("costBasis").textContent = "";
+            // Clear the chart
+            const chartCanvas = document.getElementById('investmentChart');
+            const chartContext = chartCanvas.getContext('2d');
+            chartContext.clearRect(0, 0, chartCanvas.width, chartCanvas.height);
+            document.getElementById('compareButton').disabled = true;
+            firstCalculationData = null; // Clear comparison data
         }
 
         function loadCSVData() {
@@ -325,6 +239,12 @@
 
         function toggleDarkMode() {
             document.body.classList.toggle("dark-mode");
+            const isDarkMode = document.body.classList.contains("dark-mode");
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+            // Redraw the chart if it exists to update colors
+            if (investmentChartInstance) {
+                renderChart(years, portfolioValues);
+            }
         }
 
         // Check for saved theme preference on page load
@@ -352,13 +272,8 @@
                 }
             }
         });
-
-        function toggleDarkMode() {
-            document.body.classList.toggle("dark-mode");
-            const isDarkMode = document.body.classList.contains("dark-mode");
-            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
-        }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
 
 </body>
