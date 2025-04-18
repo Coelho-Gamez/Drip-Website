@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Investment Calculator</title>
+    <style>
+        /* Light Mode Styles (Default) */
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        h1, h2, label {
+            color: #333;
+            transition: color 0.3s ease;
+        }
+
+        label {
+            color: #555;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #fff;
+            color: #333;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            border-color: #007bff;
+        }
+
+        .button-panel {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #results-container {
+            margin-top: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            color: #333;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        h2 {
+            border-bottom-color: #eee;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            transition: border-color 0.3s ease;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #final-totals {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .total-item {
+            margin-bottom: 5px;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+        }
+
+        .dark-mode .container {
+            background-color: #252525;
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+        }
+
+        .dark-mode h1,
+        .dark-mode h2,
+        .dark-mode label {
+            color: #d4d4d4;
+        }
+
+        .dark-mode label {
+            color: #a6a6a6;
+        }
+
+        .dark-mode input[type="number"] {
+            background-color: #333;
+            color: #d4d4d4;
+            border-color: #555;
+        }
+
+        .dark-mode input[type="number"]:focus {
+            border-color: #007bff;
+        }
+
+        .dark-mode #results-container {
+            background-color: #333;
+            color: #d4d4d4;
+            border-color: #555;
+        }
+
+        .dark-mode h2 {
+            border-bottom-color: #555;
+        }
+
+        .dark-mode table,
+        .dark-mode th,
+        .dark-mode td {
+            border-color: #555;
+        }
+
+        .dark-mode th {
+            background-color: #444;
+            color: #d4d4d4;
+        }
+
+        .dark-mode .button-panel button {
+            background-color: #3a3a3a;
+            color: #d4d4d4;
+            border: 1px solid #555;
+        }
+
+        .dark-mode .button-panel button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Investment Calculator</h1>
+
+        <div style="text-align: right; margin-bottom: 10px;">
+            <label for="darkModeToggle">Dark Mode:</label>
+            <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+        </div>
+
+        <form id="investmentForm" onsubmit="calculateInvestment(); return false;">
+            <div class="input-grid">
+                <div>
+                    <label for="annualContribution">Annual contribution ($):</label>
+                    <input type="number" id="annualContribution">
+                </div>
+                <div>
+                    <label for="numStocks">Number of stocks:</label>
+                    <input type="number" id="numStocks">
+                </div>
+                <div>
+                    <label for="stockPrice">Price per stock ($):</label>
+                    <input type="number" id="stockPrice">
+                </div>
+                <div>
+                    <label for="annualDividend">Annual dividend yield (%):</label>
+                    <input type="number" id="annualDividend">
+                </div>
+                <div>
+                    <label for="dividendFrequency">Dividend payout frequency (times/year):</label>
+                    <input type="number" id="dividendFrequency">
+                </div>
+                <div>
+                    <label for="holdingTime">Holding time (years):</label>
+                    <input type="number" id="holdingTime">
+                </div>
+                <div>
+                    <label for="stockGrowth">Annual stock price growth rate (%):</label>
+                    <input type="number" id="stockGrowth">
+                </div>
+                <div>
+                    <label for="dividendGrowth">Annual dividend growth rate (%):</label>
+                    <input type="number" id="dividendGrowth">
+                </div>
+                <div>
+                    <label for="taxRate">Tax rate on dividends (%):</label>
+                    <input type="number" id="taxRate">
+                </div>
+                <div>
+                    <label for="capitalGainsTaxRate">Capital gains tax rate (%):</label>
+                    <input type="number" id="capitalGainsTaxRate">
+                </div>
+                <div>
+                    <label for="managementFee">Management fee (%):</label>
+                    <input type="number" id="managementFee">
+                </div>
+                <div>
+                    <label for="transactionFee">Transaction fee ($):</label>
+                    <input type="number" id="transactionFee">
+                </div>
+            </div>
+
+            <div class="button-panel">
+                <button type="submit">Calculate</button>
+                <button type="button" onclick="useTemplate()">Use Template</button>
+                <button type="button" onclick="resetForm()">Reset</button>
+                <input type="file" id="csvFileInput" accept=".csv" style="display:none" onchange="loadCSVData()">
+                <button type="button" onclick="document.getElementById('csvFileInput').click()">Upload CSV</button>
+                <button type="button" onclick="exportToCSV()">Export to CSV</button>
+            </div>
+        </form>
+
+        <div id="results-container">
+            <h2>Yearly Summary</h2>
+            <div id="yearly-summary"></div>
+
+            <h2>Final Totals</h2>
+            <div id="final-totals">
+                <div class="total-item">Final Portfolio Value ($): <span id="finalPortfolioValue"></span></div>
+                <div class="total-item">Total Dividends Earned ($): <span id="totalDividends"></span></div>
+                <div class="total-item">Capital Gains Tax Paid ($): <span id="capitalGainsTax"></span></div>
+                <div class="total-item">Cost Basis ($): <span id="costBasis"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function useTemplate() {
+            document.getElementById("annualContribution").value = "100";
+            document.getElementById("numStocks").value = "20";
+            document.getElementById("stockPrice").value = "45";
+            document.getElementById("annualDividend").value = "19";
+            document.getElementById("dividendFrequency").value = "1";
+            document.getElementById("holdingTime").value = "10";
+            document.getElementById("stockGrowth").value = "5";
+            document.getElementById("dividendGrowth").value = "1";
+            document.getElementById("taxRate").value = "15";
+            document.getElementById("capitalGainsTaxRate").value = "20";
+            document.getElementById("managementFee").value = "1";
+            document.getElementById("transactionFee").value = "5";
+        }
+
+        function resetForm() {
+            document.getElementById("investmentForm").reset();
+            document.getElementById("yearly-summary").innerHTML = "";
+            document.getElementById("finalPortfolioValue").textContent = "";
+            document.getElementById("totalDividends").textContent = "";
+            document.getElementById("capitalGainsTax").textContent = "";
+            document.getElementById("costBasis").textContent = "";
+        }
+
+        function loadCSVData() {
+            const fileInput = document.getElementById('csvFileInput');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const contents = e.target.result;
+                    const lines = contents.split('\n').map(line => line.split(','));
+                    if (lines.length > 0) {
+                        const headers = lines[0];
+                        const data = lines[1];
+                        if (headers && data && headers.length === 12 && data.length === 12) {
+                            document.getElementById("annualContribution").value = data[0];
+                            document.getElementById("numStocks").value = data[1];
+                            document.getElementById("stockPrice").value = data[2];
+                            document.getElementById("annualDividend").value = data[3];
+                            document.getElementById("dividendFrequency").value = data[4];
+                            document.getElementById("holdingTime").value = data[5];
+                            document.getElementById("stockGrowth").value = data[6];
+                            document.getElementById("dividendGrowth").value = data[7];
+                            document.getElementById("taxRate").value = data[8];
+                            document.getElementById("capitalGainsTaxRate").value = data[9];
+                            document.getElementById("managementFee").value = data[10];
+                            document.getElementById("transactionFee").value = data[11];
+                        } else {
+                            alert("Invalid CSV format. Please ensure it has 12 comma-separated values in the second row.");
+                        }
+                    } else {
+                        alert("The selected CSV file is empty.");
+                    }
+                };
+                reader.onerror = function(e) {
+                    alert("Error reading the CSV file.");
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+
+        // Check for saved theme preference on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const darkModePreference = localStorage.getItem('darkMode');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+
+            if (darkModePreference === 'enabled') {
+                document.body.classList.add('dark-mode');
+                if (darkModeToggle) {
+                    darkModeToggle.checked = true;
+                }
+            } else if (darkModePreference === 'disabled') {
+                document.body.classList.remove('dark-mode');
+                if (darkModeToggle) {
+                    darkModeToggle.checked = false;
+                }
+            } else {
+                // Default to system preference if available
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.body.classList.add('dark-mode');
+                    if (darkModeToggle) {
+                        darkModeToggle.checked = true;
+                    }
+                }
+            }
+        });
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+            const isDarkMode = document.body.classList.contains("dark-mode");
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+        }
+    </script>
+    <script src="script.js"></script>
+
+</body>
+</html>
