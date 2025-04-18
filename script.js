@@ -171,7 +171,6 @@ function compareCalculations() {
             portfolioValues: [...portfolioValues]
         };
         document.getElementById('compareButton').textContent = 'Compare with Previous';
-        // Optionally, provide feedback to the user that the first calculation is saved
         return;
     }
 
@@ -191,9 +190,6 @@ function compareCalculations() {
         firstValues.push(firstDataPoint);
         secondValues.push(secondDataPoint);
     });
-
-    renderChart(allYears, firstValues, 'Scenario 1');
-    renderChart(allYears, secondValues, 'Scenario 2'); // This will overwrite the first chart. Need to handle multiple datasets.
 
     const chartCanvas = document.getElementById('investmentChart');
     const chartContext = chartCanvas.getContext('2d');
