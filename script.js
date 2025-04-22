@@ -268,3 +268,32 @@ function resetForm() {
     document.getElementById("capitalGainsTax").textContent = "";
     document.getElementById("costBasis").textContent = "";
 }
+
+function useTemplate() {
+    document.getElementById("annualContribution").value = "100";
+    document.getElementById("numStocks").value = "20";
+    document.getElementById("stockPrice").value = "45";
+    document.getElementById("annualDividend").value = "5";
+    document.getElementById("dividendFrequency").value = "4";
+    document.getElementById("holdingTime").value = "10";
+    document.getElementById("stockGrowth").value = "7";
+    document.getElementById("dividendGrowth").value = "3";
+    document.getElementById("taxRate").value = "15";
+    document.getElementById("capitalGainsTaxRate").value = "20";
+    document.getElementById("managementFee").value = "1";
+    document.getElementById("transactionFee").value = "10";
+}
+
+function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+    const isDarkMode = document.body.classList.contains("dark-mode");
+    localStorage.setItem("darkMode", isDarkMode ? "enabled" : "disabled");
+}
+
+// Check for saved dark mode preference on page load
+document.addEventListener("DOMContentLoaded", () => {
+    const darkModePreference = localStorage.getItem("darkMode");
+    if (darkModePreference === "enabled") {
+        document.body.classList.add("dark-mode");
+    }
+});
