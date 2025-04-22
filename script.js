@@ -297,3 +297,40 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.classList.add("dark-mode");
     }
 });
+
+function importCSV() {
+    const fileInput = document.getElementById("csvFile");
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert("Please select a CSV file to import.");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function (event) {
+        const csvData = event.target.result;
+        const rows = csvData.split("\n").map(row => row.split(","));
+
+        // Assuming the CSV has the same order as the form fields
+        const headers = rows[0];
+        const values = rows[1];
+
+        if (headers.length !== values.length) {
+            alert("Invalid CSV format.");
+            return;
+        }
+
+        // Map CSV values to form fields
+        headers.forEach((header, index) => {
+            const field = document.getElementById(header.trim());
+            if (field) {
+                field.value = values[index].trim();
+            }
+        });
+
+        alert("CSV data imported successfully!");
+    };
+
+    reader.readAsText(file);
+}
