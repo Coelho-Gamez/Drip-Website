@@ -334,3 +334,21 @@ function importCSV() {
 
     reader.readAsText(file);
 }
+
+function switchInvestmentType(type) {
+    // Hide all parameter sections
+    document.getElementById("dividends-parameters").classList.add("hidden");
+    document.getElementById("retirement-parameters").classList.add("hidden");
+
+    // Show the selected parameter section
+    if (type === "dividends") {
+        document.getElementById("dividends-parameters").classList.remove("hidden");
+    } else if (type === "retirement") {
+        document.getElementById("retirement-parameters").classList.remove("hidden");
+    }
+
+    // Update active tab
+    const tabs = document.querySelectorAll(".tab");
+    tabs.forEach(tab => tab.classList.remove("active"));
+    document.querySelector(`.tab[onclick="switchInvestmentType('${type}')"]`).classList.add("active");
+}
