@@ -147,6 +147,10 @@
             border-color: #666;
             background-color: #555;
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 
@@ -154,6 +158,22 @@
     <div class="container">
         <h1>Investment Calculator</h1>
         <form id="investmentForm" onsubmit="calculateInvestment(); return false;">
+            <label for="initialAmountType">Initial Amount Type:</label>
+            <select id="initialAmountType" onchange="toggleInitialAmountType()">
+                <option value="money">Money</option>
+                <option value="stocks">Stocks</option>
+            </select>
+
+            <div id="initialMoneyContainer">
+                <label for="initialMoney">Initial Money ($):</label>
+                <input type="number" id="initialMoney" required>
+            </div>
+
+            <div id="initialStocksContainer" class="hidden">
+                <label for="initialStocks">Initial Number of Stocks:</label>
+                <input type="number" id="initialStocks" required>
+            </div>
+
             <label for="annualContribution">Annual Contribution ($):</label>
             <input type="number" id="annualContribution" required>
 

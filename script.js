@@ -9,20 +9,41 @@ const stockAmounts = [];
 const individualDividends = [];
 const taxedIncomes = [];
 
+// Utility function to normalize input values (replace commas with dots)
+function normalizeInput(value) {
+    if (typeof value === "string") {
+        return parseFloat(value.replace(",", "."));
+    }
+    return parseFloat(value);
+}
+
 function calculateInvestment() {
-    // Get input values
-    const annualContribution = parseFloat(document.getElementById("annualContribution").value) || 0;
-    let numStocks = parseFloat(document.getElementById("numStocks").value) || 0;
-    let stockPrice = parseFloat(document.getElementById("stockPrice").value) || 0;
-    const annualDividendPercentage = (parseFloat(document.getElementById("annualDividend").value) || 0) / 100;
-    const dividendFrequency = parseFloat(document.getElementById("dividendFrequency").value) || 1;
+    const initialAmountType = document.getElementById("initialAmountType").value;
+    let initialMoney = 0;
+    let initialStocks = 0;
+
+    if (initialAmountType === "money") {
+        initialMoney = normalizeInput(document.getElementById("initialMoney").value) || 0;
+        initialStocks = Math.floor(initialMoney / normalizeInput(document.getElementById("stockPrice").value));
+    } else if (initialAmountType === "stocks") {
+        initialStocks = normalizeInput(document.getElementById("initialStocks").value) || 0;
+    }
+
+    // Use `initialStocks` in calculations
+    let numStocks = initialStocks;
+
+    // Get input values and normalize them
+    const annualContribution = normalizeInput(document.getElementById("annualContribution").value) || 0;
+    let stockPrice = normalizeInput(document.getElementById("stockPrice").value) || 0;
+    const annualDividendPercentage = (normalizeInput(document.getElementById("annualDividend").value) || 0) / 100;
+    const dividendFrequency = normalizeInput(document.getElementById("dividendFrequency").value) || 1;
     const holdingTimeInYears = parseInt(document.getElementById("holdingTime").value) || 0;
-    let stockGrowthRate = (parseFloat(document.getElementById("stockGrowth").value) || 0) / 100;
-    let dividendGrowthRate = (parseFloat(document.getElementById("dividendGrowth").value) || 0) / 100;
-    const taxRate = (parseFloat(document.getElementById("taxRate").value) || 0) / 100;
-    const capitalGainsTaxRate = (parseFloat(document.getElementById("capitalGainsTaxRate").value) || 0) / 100;
-    const managementFee = (parseFloat(document.getElementById("managementFee").value) || 0) / 100;
-    const transactionFee = parseFloat(document.getElementById("transactionFee").value) || 0;
+    let stockGrowthRate = (normalizeInput(document.getElementById("stockGrowth").value) || 0) / 100;
+    let dividendGrowthRate = (normalizeInput(document.getElementById("dividendGrowth").value) || 0) / 100;
+    const taxRate = (normalizeInput(document.getElementById("taxRate").value) || 0) / 100;
+    const capitalGainsTaxRate = (normalizeInput(document.getElementById("capitalGainsTaxRate").value) || 0) / 100;
+    const managementFee = (normalizeInput(document.getElementById("managementFee").value) || 0) / 100;
+    const transactionFee = normalizeInput(document.getElementById("transactionFee").value) || 0;
 
     // Validate inputs
     if (holdingTimeInYears <= 0 || stockPrice <= 0 || numStocks <= 0 || dividendFrequency <= 0) {
@@ -184,9 +205,13 @@ function drawLineGraph(canvasId, labels, data, title, xLabel, yLabel, color) {
     ctx.strokeStyle = color;
     ctx.lineWidth = 2;
 
+    const points = [];
+
     data.forEach((value, index) => {
         const x = margin + index * xStep;
         const y = canvas.height - margin - (value - minValue) * yScale;
+
+        points.push({ x, y, value });
 
         if (index === 0) {
             ctx.moveTo(x, y);
@@ -203,6 +228,36 @@ function drawLineGraph(canvasId, labels, data, title, xLabel, yLabel, color) {
     });
 
     ctx.stroke();
+
+    // Add hover functionality
+    canvas.addEventListener("mousemove", (event) => {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        // Clear previous tooltip
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Redraw graph
+        drawLineGraph(canvasId, labels, data, title, xLabel, yLabel, color);
+
+        points.forEach((point) => {
+            const distance = Math.sqrt(
+                Math.pow(mouseX - point.x, 2) + Math.pow(mouseY - point.y, 2)
+            );
+
+            if (distance < 10) {
+                // Draw tooltip
+                ctx.beginPath();
+                ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+                ctx.fillRect(point.x + 10, point.y - 25, 50, 20);
+                ctx.fillStyle = "#fff";
+                ctx.font = "12px sans-serif";
+                ctx.fillText(point.value.toFixed(2), point.x + 35, point.y - 10);
+                ctx.closePath();
+            }
+        });
+    });
 }
 
 function drawBarGraph(canvasId, labels, data, title, xLabel, yLabel, color) {
@@ -351,4 +406,18 @@ function switchInvestmentType(type) {
     const tabs = document.querySelectorAll(".tab");
     tabs.forEach(tab => tab.classList.remove("active"));
     document.querySelector(`.tab[onclick="switchInvestmentType('${type}')"]`).classList.add("active");
+}
+
+function toggleInitialAmountType() {
+    const type = document.getElementById("initialAmountType").value;
+    const moneyContainer = document.getElementById("initialMoneyContainer");
+    const stocksContainer = document.getElementById("initialStocksContainer");
+
+    if (type === "money") {
+        moneyContainer.classList.remove("hidden");
+        stocksContainer.classList.add("hidden");
+    } else if (type === "stocks") {
+        moneyContainer.classList.add("hidden");
+        stocksContainer.classList.remove("hidden");
+    }
 }
