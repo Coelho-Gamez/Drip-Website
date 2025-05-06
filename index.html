@@ -161,7 +161,6 @@
             <label for="initialAmountType">Initial Amount Type:</label>
             <select id="initialAmountType" onchange="toggleInitialAmountType()">
                 <option value="money">Money</option>
-                <option value="stocks">Stocks</option>
             </select>
 
             <div id="initialMoneyContainer">
@@ -169,16 +168,8 @@
                 <input type="number" id="initialMoney" required>
             </div>
 
-            <div id="initialStocksContainer" class="hidden">
-                <label for="initialStocks">Initial Number of Stocks:</label>
-                <input type="number" id="initialStocks" required>
-            </div>
-
             <label for="annualContribution">Annual Contribution ($):</label>
             <input type="number" id="annualContribution" required>
-
-            <label for="numStocks">Number of Stocks:</label>
-            <input type="number" id="numStocks" required>
 
             <label for="stockPrice">Stock Price ($):</label>
             <input type="number" id="stockPrice" required>
@@ -210,14 +201,10 @@
             <label for="transactionFee">Transaction Fee ($):</label>
             <input type="number" id="transactionFee" required>
 
-            <label for="csvFile">Import CSV:</label>
-            <input type="file" id="csvFile" accept=".csv">
-
             <div class="button-panel">
                 <button type="submit">Calculate</button>
                 <button type="button" onclick="resetForm()">Reset</button>
                 <button type="button" onclick="exportToCSV()">Export to CSV</button>
-                <button type="button" onclick="importCSV()">Import CSV</button>
                 <button type="button" onclick="useTemplate()">Use Template</button>
                 <button type="button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
             </div>

@@ -17,6 +17,16 @@ function normalizeInput(value) {
     return parseFloat(value);
 }
 
+// Utility function to format numbers with prefixes (k, m)
+function formatNumber(value) {
+    if (value >= 1e6) {
+        return (value / 1e6).toFixed(2) + "m";
+    } else if (value >= 1e3) {
+        return (value / 1e3).toFixed(2) + "k";
+    }
+    return value.toFixed(2);
+}
+
 function calculateInvestment() {
     const initialAmountType = document.getElementById("initialAmountType").value;
     let initialMoney = 0;
@@ -106,7 +116,7 @@ function calculateInvestment() {
         individualDividends.push(individualDividend);
         taxedIncomes.push(taxedIncome);
 
-        yearlySummaryHTML += `<tr><td>${year}</td><td>${stockPrice.toFixed(2)}</td><td>${totalStockValue.toFixed(2)}</td><td>${Math.floor(numStocks)}</td><td>${individualDividend.toFixed(2)}</td><td>${totalDividendsPerYear.toFixed(2)}</td><td>${taxedIncome.toFixed(2)}</td></tr>`;
+        yearlySummaryHTML += `<tr><td>${year}</td><td>${formatNumber(stockPrice)}</td><td>${formatNumber(totalStockValue)}</td><td>${Math.floor(numStocks)}</td><td>${formatNumber(individualDividend)}</td><td>${formatNumber(totalDividendsPerYear)}</td><td>${formatNumber(taxedIncome)}</td></tr>`;
     }
 
     yearlySummaryHTML += "</tbody></table>";
@@ -117,10 +127,10 @@ function calculateInvestment() {
     let capitalGainsTax = capitalGains > 0 ? capitalGains * capitalGainsTaxRate : 0;
     const finalPortfolioValueAfterTax = totalStockValue - capitalGainsTax;
 
-    document.getElementById("finalPortfolioValue").textContent = finalPortfolioValueAfterTax.toFixed(2);
-    document.getElementById("totalDividends").textContent = totalDividend.toFixed(2);
-    document.getElementById("capitalGainsTax").textContent = capitalGainsTax.toFixed(2);
-    document.getElementById("costBasis").textContent = totalCostBasis.toFixed(2);
+    document.getElementById("finalPortfolioValue").textContent = formatNumber(finalPortfolioValueAfterTax);
+    document.getElementById("totalDividends").textContent = formatNumber(totalDividend);
+    document.getElementById("capitalGainsTax").textContent = formatNumber(capitalGainsTax);
+    document.getElementById("costBasis").textContent = formatNumber(totalCostBasis);
 
     // Draw graphs
     drawLineGraph("portfolioValueChart", years, portfolioValues, "Portfolio Value Over Time", "Year", "Portfolio Value ($)", "rgba(75, 192, 192, 1)");
@@ -132,7 +142,7 @@ function exportToCSV() {
     let csv = header;
 
     for (let i = 0; i < years.length; i++) {
-        csv += `${years[i]},${stockPrices[i].toFixed(2)},${portfolioValues[i].toFixed(2)},${stockAmounts[i]},${individualDividends[i].toFixed(2)},${totalDividendsPerYearList[i].toFixed(2)},${taxedIncomes[i].toFixed(2)},${transactionFee.toFixed(2)}\n`;
+        csv += `${years[i]},${formatNumber(stockPrices[i])},${formatNumber(portfolioValues[i])},${stockAmounts[i]},${formatNumber(individualDividends[i])},${formatNumber(totalDividendsPerYearList[i])},${formatNumber(taxedIncomes[i])},${formatNumber(transactionFee)}\n`;
     }
 
     csv += `\nFinal Portfolio Value ($),${document.getElementById("finalPortfolioValue").textContent}\n`;
@@ -253,7 +263,7 @@ function drawLineGraph(canvasId, labels, data, title, xLabel, yLabel, color) {
                 ctx.fillRect(point.x + 10, point.y - 25, 50, 20);
                 ctx.fillStyle = "#fff";
                 ctx.font = "12px sans-serif";
-                ctx.fillText(point.value.toFixed(2), point.x + 35, point.y - 10);
+                ctx.fillText(formatNumber(point.value), point.x + 35, point.y - 10);
                 ctx.closePath();
             }
         });
@@ -311,7 +321,7 @@ function drawBarGraph(canvasId, labels, data, title, xLabel, yLabel, color) {
         // Draw value above bar
         ctx.fillStyle = "#333";
         ctx.textAlign = "center";
-        ctx.fillText(value.toFixed(2), x + barWidth / 2, y - 5);
+        ctx.fillText(formatNumber(value), x + barWidth / 2, y - 5);
     });
 }
 
