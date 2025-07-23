@@ -6,230 +6,434 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Investment Calculator</title>
     <style>
-        /* General Styles */
+        /* General Styles - Forced Dark Mode */
         body {
-            font-family: sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            font-family: 'Inter', sans-serif; /* Using Inter font as per guidelines */
+            margin: 0;
+            padding: 20px;
+            background-color: #333; /* Dark background */
+            color: #f4f4f4; /* Light text for dark mode */
+            /* Removed transition as mode is fixed */
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px; /* Slightly wider for tabs */
             margin: 0 auto;
-            background-color: #fff;
+            background-color: #444; /* Darker container background */
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px; /* Rounded corners like FlatLaf Component.arc */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            display: flex; /* Use flex for potential side-by-side layouts in future */
+            flex-direction: column;
         }
 
         h1, h2 {
             text-align: center;
+            color: #fff; /* White headings */
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
+            color: #ccc; /* Lighter label color */
         }
 
-        input[type="number"] {
+        /* Input field styles (fixed dark mode) */
+        input[type="number"],
+        select {
             width: 100%;
             padding: 8px;
             margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid #666; /* Darker border */
+            border-radius: 5px; /* Rounded text fields */
+            background-color: #555; /* Darker input background */
+            color: #fff; /* White text in inputs */
+            box-sizing: border-box; /* Include padding in width */
+            /* Removed transition as mode is fixed */
         }
 
-        input[type="file"] {
-            margin-bottom: 15px;
-        }
-
-        input[type="number"]:focus {
-            border-color: #007bff;
+        input[type="number"]:focus,
+        select:focus {
+            border-color: #007bff; /* Blue focus highlight */
             outline: none;
         }
 
+        /* Button Styling - Mimicking FlatLaf Buttons */
         .button-panel {
             text-align: center;
             margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #555; /* Separator for buttons */
         }
 
         button {
             padding: 10px 20px;
-            margin: 5px;
+            margin: 8px;
             border: none;
-            border-radius: 4px;
-            background-color: #007bff;
-            color: #fff;
+            border-radius: 10px; /* Rounded buttons */
+            background-color: #333; /* Dark gray for buttons */
+            color: #fff; /* White text for buttons */
             cursor: pointer;
             font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.2s ease, transform 0.1s ease;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #0056b3; /* Slightly darker blue on hover */
+            transform: translateY(-1px); /* Slight lift effect */
         }
 
-        #results-container {
-            margin-top: 30px;
+        button:active {
+            transform: translateY(0);
+            box-shadow: none;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+        /* Tabbed Pane Styling - Mimicking JTabbedPane */
+        .tabs {
+            display: flex;
+            justify-content: center; /* Center the tabs */
+            margin-bottom: 20px;
+            border-bottom: 2px solid #666; /* Separator for tabs */
         }
 
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
+        .tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            color: #ccc; /* Light gray for inactive tabs */
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            margin: 0 2px; /* Small space between tabs */
+            background-color: #555; /* Background for inactive tabs */
         }
 
-        th {
+        .tab:hover {
+            background-color: #666; /* Darker gray on hover */
+            color: #fff;
+        }
+
+        .tab.active {
             background-color: #007bff;
             color: #fff;
+            border-bottom: 2px solid #007bff;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        #graphs-container {
-            margin-top: 30px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: #f9f9f9;
-        }
-
-        #graphs-container h2 {
-            margin-bottom: 20px;
-        }
-
-        canvas {
-            display: block;
-            margin: 0 auto 20px;
-            border: 1px solid #ccc;
-            max-width: 100%;
-        }
-
-        /* Dark Mode Styles */
-        body.dark-mode {
-            background-color: #333;
-            color: #f4f4f4;
-        }
-
-        body.dark-mode .container {
+        .tab-content {
+            padding: 20px 0;
             background-color: #444;
-        }
-
-        body.dark-mode input[type="number"] {
-            background-color: #555;
-            color: #fff;
-            border-color: #666;
-        }
-
-        body.dark-mode input[type="number"]:focus {
-            border-color: #007bff;
-        }
-
-        body.dark-mode button {
-            background-color: #0056b3;
-        }
-
-        body.dark-mode button:hover {
-            background-color: #003f7f;
-        }
-
-        body.dark-mode th {
-            background-color: #0056b3;
-        }
-
-        body.dark-mode canvas {
-            border-color: #666;
-            background-color: #555;
+            border-radius: 0 0 10px 10px;
         }
 
         .hidden {
             display: none;
         }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #555;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            border: 1px solid #666;
+            padding: 10px;
+            text-align: center;
+            color: #fff;
+            min-height: 30px; /* Ensure a minimum height for table cells */
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        /* Final Totals Styling - Redesigned for simplicity and robustness */
+        #final-totals {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #666;
+            border-radius: 8px;
+            background-color: #555;
+            display: flex; /* Use flex on the container */
+            flex-direction: column; /* Stack items vertically */
+            gap: 10px; /* Space between each total item */
+        }
+
+        .final-total-item {
+            display: flex; /* Flex for each label-value pair */
+            justify-content: space-between; /* Push label to start, value to end */
+            align-items: baseline; /* Align text baselines */
+            color: #fff; /* Ensure text color */
+            font-size: 1.1em; /* Slightly larger text for totals */
+        }
+
+        .final-total-item .total-label {
+            padding-right: 15px; /* Space between label and value */
+            white-space: nowrap; /* Prevent label from wrapping */
+            text-align: right; /* Ensure label aligns right if space allows */
+        }
+
+        .final-total-item .total-value {
+            font-weight: bold;
+            color: #007bff; /* Blue for the actual numbers */
+            white-space: nowrap; /* Prevent value from wrapping */
+            text-align: left; /* Ensure value aligns left */
+            flex-shrink: 0; /* Prevent value from shrinking */
+        }
+
+
+        /* Graphs Container Styling */
+        #graphs-container {
+            margin-top: 30px;
+            padding: 15px;
+            border: 1px solid #666;
+            border-radius: 8px;
+            background-color: #555;
+            text-align: center;
+        }
+
+        canvas {
+            display: block;
+            margin: 20px auto;
+            border: 1px solid #888;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            background-color: #333;
+        }
+
+        /* Feedback Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it's on top of everything */
+        }
+
+        .modal-content {
+            background-color: #444; /* Darker background for the modal itself */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 90%;
+            color: #f4f4f4; /* Light text */
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            color: #fff; /* White heading */
+        }
+
+        .modal-content textarea {
+            width: calc(100% - 20px); /* Account for padding */
+            height: 120px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #666;
+            border-radius: 5px;
+            background-color: #555;
+            color: #fff;
+            resize: vertical; /* Allow vertical resizing */
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .modal-buttons button {
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .modal-buttons button.primary {
+            background-color: #007bff;
+        }
+        .modal-buttons button.primary:hover {
+            background-color: #0056b3;
+        }
+
+        .modal-buttons button.secondary {
+            background-color: #6c757d;
+        }
+        .modal-buttons button.secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* New: Feedback button at the very bottom */
+        .bottom-feedback-panel {
+            text-align: center;
+            margin-top: 40px; /* Space from the container above */
+            padding-bottom: 20px; /* Space from the very bottom of the page */
+        }
+
+        .bottom-feedback-panel button {
+            padding: 12px 25px;
+            background-color: #28a745; /* A distinct green color */
+            color: #fff;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 600;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .bottom-feedback-panel button:hover {
+            background-color: #218838; /* Darker green on hover */
+            transform: translateY(-2px);
+        }
+
     </style>
 </head>
 
 <body>
     <div class="container">
         <h1>Investment Calculator</h1>
-        <form id="investmentForm" onsubmit="calculateInvestment(); return false;">
-            <label for="initialAmountType">Initial Amount Type:</label>
-            <select id="initialAmountType" onchange="toggleInitialAmountType()">
-                <option value="money">Money</option>
-            </select>
 
-            <div id="initialMoneyContainer">
-                <label for="initialMoney">Initial Money ($):</label>
-                <input type="number" id="initialMoney" required>
-            </div>
+        <!-- Tabbed Pane Structure -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('calculator')">Calculator</div>
+            <div class="tab" onclick="switchTab('results')">Results</div>
+            <div class="tab" onclick="switchTab('graphs')">Graphs</div>
+        </div>
 
-            <label for="annualContribution">Annual Contribution ($):</label>
-            <input type="number" id="annualContribution" required>
+        <!-- Calculator Tab Content -->
+        <div id="calculator-tab" class="tab-content">
+            <form id="investmentForm">
+                <label for="initialAmountType">Initial Amount Type:</label>
+                <select id="initialAmountType" onchange="toggleInitialAmountType()">
+                    <option value="money">Money</option>
+                    <option value="stocks">Stocks</option>
+                </select>
 
-            <label for="stockPrice">Stock Price ($):</label>
-            <input type="number" id="stockPrice" required>
+                <div id="initialMoneyContainer">
+                    <label for="initialMoney">Initial Money ($):</label>
+                    <input type="number" id="initialMoney">
+                </div>
 
-            <label for="annualDividend">Annual Dividend (%):</label>
-            <input type="number" id="annualDividend" required>
+                <div id="initialStocksContainer" class="hidden">
+                    <label for="initialStocks">Initial Number of Stocks:</label>
+                    <input type="number" id="initialStocks">
+                </div>
 
-            <label for="dividendFrequency">Dividend Frequency (per year):</label>
-            <input type="number" id="dividendFrequency" required>
+                <label for="annualContribution">Annual Contribution ($):</label>
+                <input type="number" id="annualContribution">
 
-            <label for="holdingTime">Holding Time (years):</label>
-            <input type="number" id="holdingTime" required>
+                <label for="stockPrice">Stock Price ($):</label>
+                <input type="number" id="stockPrice">
 
-            <label for="stockGrowth">Stock Growth Rate (%):</label>
-            <input type="number" id="stockGrowth" required>
+                <label for="annualDividend">Annual Dividend (%):</label>
+                <input type="number" id="annualDividend">
 
-            <label for="dividendGrowth">Dividend Growth Rate (%):</label>
-            <input type="number" id="dividendGrowth" required>
+                <label for="dividendFrequency">Dividend Frequency (per year):</label>
+                <input type="number" id="dividendFrequency">
 
-            <label for="taxRate">Tax Rate on Dividends (%):</label>
-            <input type="number" id="taxRate" required>
+                <label for="holdingTime">Holding Time (years):</label>
+                <input type="number" id="holdingTime">
 
-            <label for="capitalGainsTaxRate">Capital Gains Tax Rate (%):</label>
-            <input type="number" id="capitalGainsTaxRate" required>
+                <label for="stockGrowth">Annual Stock Price Growth Rate (%):</label>
+                <input type="number" id="stockGrowth">
 
-            <label for="managementFee">Management Fee (%):</label>
-            <input type="number" id="managementFee" required>
+                <label for="dividendGrowth">Annual Dividend Growth Rate (%):</label>
+                <input type="number" id="dividendGrowth">
 
-            <label for="transactionFee">Transaction Fee ($):</label>
-            <input type="number" id="transactionFee" required>
+                <label for="taxRate">Tax Rate on Dividends (%):</label>
+                <input type="number" id="taxRate">
 
-            <div class="button-panel">
-                <button type="submit">Calculate</button>
-                <button type="button" onclick="resetForm()">Reset</button>
-                <button type="button" onclick="exportToCSV()">Export to CSV</button>
-                <button type="button" onclick="useTemplate()">Use Template</button>
-                <button type="button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-            </div>
-        </form>
+                <label for="capitalGainsTaxRate">Capital Gains Tax Rate (%):</label>
+                <input type="number" id="capitalGainsTaxRate">
 
-        <div id="results-container">
+                <label for="managementFee">Management Fee (%):</label>
+                <input type="number" id="managementFee">
+
+                <label for="transactionFee">Transaction Fee ($):</label>
+                <input type="number" id="transactionFee">
+
+                <div class="button-panel">
+                    <button type="button" onclick="calculateInvestment()">Calculate</button>
+                    <button type="button" onclick="resetForm()">Reset</button>
+                    <button type="button" onclick="useTemplate()">Use Template</button>
+                    <button type="button" onclick="document.getElementById('csvFile').click()">Import CSV</button>
+                    <button type="button" onclick="exportToCSV()">Export to CSV</button>
+                    <input type="file" id="csvFile" accept=".csv" onchange="importCSV()" style="display: none;">
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Tab Content -->
+        <div id="results-tab" class="tab-content hidden">
             <h2>Yearly Summary</h2>
-            <div id="yearly-summary"></div>
+            <div id="yearly-summary-table-container"></div> <!-- Container for the dynamically generated table -->
 
             <h2>Final Totals</h2>
             <div id="final-totals">
-                <div>Final Portfolio Value ($): <span id="finalPortfolioValue"></span></div>
-                <div>Total Dividends Earned ($): <span id="totalDividends"></span></div>
-                <div>Capital Gains Tax Paid ($): <span id="capitalGainsTax"></span></div>
-                <div>Cost Basis ($): <span id="costBasis"></span></div>
+                <!-- Each label-value pair is now wrapped in a .final-total-item div for simpler flex management -->
+                <div class="final-total-item">
+                    <span class="total-label">Final Portfolio Value ($):</span> <span id="finalPortfolioValue" class="total-value"></span>
+                </div>
+                <div class="final-total-item">
+                    <span class="total-label">Total Dividends Earned ($):</span> <span id="totalDividends" class="total-value"></span>
+                </div>
+                <div class="final-total-item">
+                    <span class="total-label">Capital Gains Tax Paid ($):</span> <span id="capitalGainsTax" class="total-value"></span>
+                </div>
+                <div class="final-total-item">
+                    <span class="total-label">Cost Basis ($):</span> <span id="costBasis" class="total-value"></span>
+                </div>
             </div>
         </div>
 
-        <div id="graphs-container">
+        <!-- Graphs Tab Content -->
+        <div id="graphs-tab" class="tab-content hidden">
             <h2>Graphs</h2>
             <canvas id="portfolioValueChart" width="700" height="400"></canvas>
             <canvas id="dividendsChart" width="700" height="400"></canvas>
+            <canvas id="stockPriceChart" width="700" height="400"></canvas> <!-- Added third graph -->
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <!-- New: Feedback button at the very bottom -->
+    <div class="bottom-feedback-panel">
+        <button type="button" id="openFeedbackBtn">Send Us Feedback</button>
+    </div>
+
+    <!-- Feedback Modal Structure -->
+    <!-- Added 'hidden' class here to ensure it's hidden by default on page load -->
+    <div id="feedbackModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>Send Feedback</h2>
+            <textarea id="feedbackText" placeholder="Type your feedback here..."></textarea>
+            <div class="modal-buttons">
+                <button type="button" class="primary" id="sendFeedbackBtn">Send Feedback</button>
+                <button type="button" class="secondary" id="closeFeedbackBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link to your separate JavaScript file -->
+    <script src="investment_calculator.js"></script>
 </body>
 
 </html>
