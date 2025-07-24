@@ -26,6 +26,30 @@ function calculateNiceStep(range, numTicks) {
 
 // --- Calculation Logic ---
 function calculateInvestment() {
+    // Check required fields
+    const requiredFields = [
+        initialMoneyField,
+        initialStocksField,
+        stockPriceField,
+        document.getElementById("annualContribution"),
+        document.getElementById("annualDividend"),
+        document.getElementById("dividendFrequency"),
+        document.getElementById("holdingTime"),
+        document.getElementById("stockGrowth"),
+        document.getElementById("dividendGrowth"),
+        document.getElementById("taxRate"),
+        document.getElementById("capitalGainsTaxRate"),
+        document.getElementById("managementFee"),
+        document.getElementById("transactionFee")
+    ];
+
+    let allFilled = requiredFields.some(field => field && field.value !== "");
+    if (!allFilled) {
+        // Only show alert if nothing is filled at all
+        alert("Please fill in the required fields before calculating.");
+        return;
+    }
+
     years = []; portfolioValues = []; totalDividendsPerYearList = [];
     stockPrices = []; stockAmounts = []; individualDividends = []; taxedIncomes = [];
 
@@ -183,7 +207,7 @@ function resetForm() {
         const canvas = document.getElementById(id);
         canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
     });
-    alert("Form reset successfully!");
+    // Removed annoying popup
 }
 function useTemplate() {
     document.getElementById("annualContribution").value = "100";
