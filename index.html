@@ -3,33 +3,33 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=900, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Investment Calculator</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,600&display=swap">
     <style>
+        /* General Styles - Forced Dark Mode */
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif; /* Using Inter font as per guidelines */
             margin: 0;
             padding: 20px;
-            background-color: #333;
-            color: #f4f4f4;
+            background-color: #333; /* Dark background */
+            color: #f4f4f4; /* Light text for dark mode */
+            /* Removed transition as mode is fixed */
         }
 
         .container {
-            max-width: 900px;
+            max-width: 900px; /* Slightly wider for tabs */
             margin: 0 auto;
-            background-color: #444;
+            background-color: #444; /* Darker container background */
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 10px; /* Rounded corners like FlatLaf Component.arc */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            display: flex;
+            display: flex; /* Use flex for potential side-by-side layouts in future */
             flex-direction: column;
         }
 
-        h1,
-        h2 {
+        h1, h2 {
             text-align: center;
-            color: #fff;
+            color: #fff; /* White headings */
             margin-bottom: 20px;
         }
 
@@ -37,51 +37,54 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-            color: #ccc;
+            color: #ccc; /* Lighter label color */
         }
 
+        /* Input field styles (fixed dark mode) */
         input[type="number"],
         select {
             width: 100%;
             padding: 8px;
             margin-bottom: 15px;
-            border: 1px solid #666;
-            border-radius: 5px;
-            background-color: #555;
-            color: #fff;
-            box-sizing: border-box;
+            border: 1px solid #666; /* Darker border */
+            border-radius: 5px; /* Rounded text fields */
+            background-color: #555; /* Darker input background */
+            color: #fff; /* White text in inputs */
+            box-sizing: border-box; /* Include padding in width */
+            /* Removed transition as mode is fixed */
         }
 
         input[type="number"]:focus,
         select:focus {
-            border-color: #007bff;
+            border-color: #007bff; /* Blue focus highlight */
             outline: none;
         }
 
+        /* Button Styling - Mimicking FlatLaf Buttons */
         .button-panel {
             text-align: center;
             margin-top: 20px;
             padding-top: 10px;
-            border-top: 1px solid #555;
+            border-top: 1px solid #555; /* Separator for buttons */
         }
 
         button {
             padding: 10px 20px;
             margin: 8px;
             border: none;
-            border-radius: 10px;
-            background-color: #333;
-            color: #fff;
+            border-radius: 10px; /* Rounded buttons */
+            background-color: #333; /* Dark gray for buttons */
+            color: #fff; /* White text for buttons */
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.2s, transform 0.1s;
+            transition: background-color 0.2s ease, transform 0.1s ease;
         }
 
         button:hover {
-            background-color: #0056b3;
-            transform: translateY(-1px);
+            background-color: #0056b3; /* Slightly darker blue on hover */
+            transform: translateY(-1px); /* Slight lift effect */
         }
 
         button:active {
@@ -89,11 +92,12 @@
             box-shadow: none;
         }
 
+        /* Tabbed Pane Styling - Mimicking JTabbedPane */
         .tabs {
             display: flex;
-            justify-content: center;
+            justify-content: center; /* Center the tabs */
             margin-bottom: 20px;
-            border-bottom: 2px solid #666;
+            border-bottom: 2px solid #666; /* Separator for tabs */
         }
 
         .tab {
@@ -101,16 +105,16 @@
             cursor: pointer;
             font-size: 17px;
             font-weight: 600;
-            color: #ccc;
+            color: #ccc; /* Light gray for inactive tabs */
             border-top-left-radius: 8px;
             border-top-right-radius: 8px;
-            transition: background-color 0.2s, color 0.2s;
-            margin: 0 2px;
-            background-color: #555;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            margin: 0 2px; /* Small space between tabs */
+            background-color: #555; /* Background for inactive tabs */
         }
 
         .tab:hover {
-            background-color: #666;
+            background-color: #666; /* Darker gray on hover */
             color: #fff;
         }
 
@@ -131,6 +135,7 @@
             display: none;
         }
 
+        /* Table Styling */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -140,13 +145,12 @@
             overflow: hidden;
         }
 
-        th,
-        td {
+        th, td {
             border: 1px solid #666;
             padding: 10px;
             text-align: center;
             color: #fff;
-            min-height: 30px;
+            min-height: 30px; /* Ensure a minimum height for table cells */
         }
 
         th {
@@ -155,39 +159,42 @@
             font-weight: bold;
         }
 
+        /* Final Totals Styling - Redesigned for simplicity and robustness */
         #final-totals {
             margin-top: 30px;
             padding: 20px;
             border: 1px solid #666;
             border-radius: 8px;
             background-color: #555;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            display: flex; /* Use flex on the container */
+            flex-direction: column; /* Stack items vertically */
+            gap: 10px; /* Space between each total item */
         }
 
         .final-total-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            color: #fff;
-            font-size: 1.1em;
+            display: flex; /* Flex for each label-value pair */
+            justify-content: space-between; /* Push label to start, value to end */
+            align-items: baseline; /* Align text baselines */
+            color: #fff; /* Ensure text color */
+            font-size: 1.1em; /* Slightly larger text for totals */
         }
 
         .final-total-item .total-label {
-            padding-right: 15px;
-            white-space: nowrap;
-            text-align: right;
+            padding-right: 15px; /* Space between label and value */
+            white-space: nowrap; /* Prevent label from wrapping */
+            text-align: right; /* Ensure label aligns right if space allows */
         }
 
         .final-total-item .total-value {
             font-weight: bold;
-            color: #007bff;
-            white-space: nowrap;
-            text-align: left;
-            flex-shrink: 0;
+            color: #007bff; /* Blue for the actual numbers */
+            white-space: nowrap; /* Prevent value from wrapping */
+            text-align: left; /* Ensure value aligns left */
+            flex-shrink: 0; /* Prevent value from shrinking */
         }
 
+
+        /* Graphs Container Styling */
         #graphs-container {
             margin-top: 30px;
             padding: 15px;
@@ -207,36 +214,38 @@
             background-color: #333;
         }
 
+        /* Feedback Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+            /* Removed display: flex from here. It will be added by JS when opened. */
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 1000; /* Ensure it's on top of everything */
         }
 
         .modal-content {
-            background-color: #444;
+            background-color: #444; /* Darker background for the modal itself */
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
             max-width: 500px;
             width: 90%;
-            color: #f4f4f4;
+            color: #f4f4f4; /* Light text */
             text-align: center;
         }
 
         .modal-content h2 {
             margin-top: 0;
-            color: #fff;
+            color: #fff; /* White heading */
         }
 
         .modal-content textarea {
-            width: calc(100% - 20px);
+            width: calc(100% - 20px); /* Account for padding */
             height: 120px;
             padding: 10px;
             margin-bottom: 20px;
@@ -244,7 +253,7 @@
             border-radius: 5px;
             background-color: #555;
             color: #fff;
-            resize: vertical;
+            resize: vertical; /* Allow vertical resizing */
         }
 
         .modal-buttons {
@@ -262,7 +271,6 @@
         .modal-buttons button.primary {
             background-color: #007bff;
         }
-
         .modal-buttons button.primary:hover {
             background-color: #0056b3;
         }
@@ -270,32 +278,33 @@
         .modal-buttons button.secondary {
             background-color: #6c757d;
         }
-
         .modal-buttons button.secondary:hover {
             background-color: #5a6268;
         }
 
+        /* New: Feedback button at the very bottom */
         .bottom-feedback-panel {
             text-align: center;
-            margin-top: 40px;
-            padding-bottom: 20px;
+            margin-top: 40px; /* Space from the container above */
+            padding-bottom: 20px; /* Space from the very bottom of the page */
         }
 
         .bottom-feedback-panel button {
             padding: 12px 25px;
-            background-color: #28a745;
+            background-color: #28a745; /* A distinct green color */
             color: #fff;
             border-radius: 10px;
             font-size: 17px;
             font-weight: 600;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-            transition: background-color 0.2s, transform 0.1s;
+            transition: background-color 0.2s ease, transform 0.1s ease;
         }
 
         .bottom-feedback-panel button:hover {
-            background-color: #218838;
+            background-color: #218838; /* Darker green on hover */
             transform: translateY(-2px);
         }
+
     </style>
 </head>
 
@@ -422,8 +431,6 @@
             </div>
         </div>
     </div>
-
-    <script src="script.js"></script>
 </body>
 
 </html>
