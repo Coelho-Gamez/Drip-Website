@@ -1,7 +1,6 @@
-<script>
-        // --- Global Variables ---
-        let years = [], portfolioValues = [], totalDividendsPerYearList = [],
-            stockPrices = [], stockAmounts = [], individualDividends = [], taxedIncomes = [];
+// --- Global Variables ---
+let years = [], portfolioValues = [], totalDividendsPerYearList = [],
+    stockPrices = [], stockAmounts = [], individualDividends = [], taxedIncomes = [];
         let initialMoneyField, initialStocksField, stockPriceField, initialAmountTypeSelect;
 
         // --- Utility Functions ---
@@ -416,7 +415,3 @@
             // Hide feedback modal on load
             document.getElementById("feedbackModal").style.display = 'none';
         });
-    </script>
-</body>
-
-</html>
