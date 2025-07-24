@@ -26,6 +26,30 @@ function calculateNiceStep(range, numTicks) {
 
 // --- Calculation Logic ---
 function calculateInvestment() {
+    // Check required fields
+    const requiredFields = [
+        initialMoneyField,
+        initialStocksField,
+        stockPriceField,
+        document.getElementById("annualContribution"),
+        document.getElementById("annualDividend"),
+        document.getElementById("dividendFrequency"),
+        document.getElementById("holdingTime"),
+        document.getElementById("stockGrowth"),
+        document.getElementById("dividendGrowth"),
+        document.getElementById("taxRate"),
+        document.getElementById("capitalGainsTaxRate"),
+        document.getElementById("managementFee"),
+        document.getElementById("transactionFee")
+    ];
+
+    let allFilled = requiredFields.some(field => field && field.value !== "");
+    if (!allFilled) {
+        // Only show alert if nothing is filled at all
+        alert("Please fill in the required fields before calculating.");
+        return;
+    }
+
     years = []; portfolioValues = []; totalDividendsPerYearList = [];
     stockPrices = []; stockAmounts = []; individualDividends = []; taxedIncomes = [];
 
@@ -98,6 +122,9 @@ function calculateInvestment() {
     drawBarGraph("portfolioValueChart", years, portfolioValues, "Portfolio Value Over Time", "Year", "Portfolio Value ($)", "rgba(75,192,192,1)");
     drawBarGraph("dividendsChart", years, totalDividendsPerYearList, "Dividends Earned Per Year", "Year", "Dividends ($)", "rgba(153,102,255,0.6)");
     drawBarGraph("stockPriceChart", years, stockPrices, "Stock Price Over Time", "Year", "Stock Price ($)", "rgba(255,206,86,0.8)");
+
+    // Switch to results tab after calculation
+    switchTab('results');
 }
 
 // --- Graph Drawing ---
@@ -183,7 +210,7 @@ function resetForm() {
         const canvas = document.getElementById(id);
         canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
     });
-    alert("Form reset successfully!");
+    // Removed annoying popup
 }
 function useTemplate() {
     document.getElementById("annualContribution").value = "100";
